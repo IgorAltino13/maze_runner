@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stack>
+#include <cstdio> 
 
 // Matriz de char representnado o labirinto
 char** maze; // Voce também pode representar o labirinto como um vetor de vetores de char (vector<vector<char>>)
@@ -7,6 +8,7 @@ char** maze; // Voce também pode representar o labirinto como um vetor de vetor
 // Numero de linhas e colunas do labirinto
 int num_rows;
 int num_cols;
+
 
 // Representação de uma posição
 struct pos_t {
@@ -18,7 +20,6 @@ struct pos_t {
 // posicões a serem exploradas no labirinto
 std::stack<pos_t> valid_positions;
 /* Inserir elemento: 
-
 	 pos_t pos;
 	 pos.i = 1;
 	 pos.j = 3;
@@ -36,12 +37,17 @@ std::stack<pos_t> valid_positions;
 
 // Função que le o labirinto de um arquivo texto, carrega em 
 // memória e retorna a posição inicial
-pos_t load_maze(const char* file_name) {
+pos_t load_maze(const char* file_name){
 	pos_t initial_pos;
 	// Abre o arquivo para leitura (fopen)
-
+	FILE *arq;
+	arq = fopen("../data/maze.txt", "r");
 	// Le o numero de linhas e colunas (fscanf) 
 	// e salva em num_rows e num_cols
+	fscanf(arq, "%i", &num_rows);
+	fscanf(arq, "%i", &num_cols);
+	
+
 
 	// Aloca a matriz maze (malloc)
 	for (int i = 0; i < num_rows; ++i)
@@ -55,6 +61,7 @@ pos_t load_maze(const char* file_name) {
 	}
 	return initial_pos;
 }
+
 
 // Função que imprime o labirinto
 void print_maze() {
@@ -104,7 +111,7 @@ int main(int argc, char* argv[]) {
 	pos_t initial_pos = load_maze(argv[1]);
 	// chamar a função de navegação
 	bool exit_found = walk(initial_pos);
-	
+	printf("%i", num_rows);
 	// Tratar o retorno (imprimir mensagem)
 	
 	return 0;
