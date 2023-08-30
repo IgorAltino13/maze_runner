@@ -87,58 +87,51 @@ void print_maze() {
 // Função responsável pela navegação.
 // Recebe como entrada a posição initial e retorna um booleando indicando se a saída foi encontrada
 bool walk(pos_t pos) {
-	// Verificar se a posição atual é a saída
-     
-	// Repita até que a saída seja encontrada ou não existam mais posições não exploradas
-		// Marcar a posição atual com o símbolo '.'
-		if(maze[pos.i][pos.j] == 's'){
-			return true;
-		}
-		else{
-			maze[pos.i][pos.j] = '.';
-		 // Limpar a tela
-        std::system("clear");
-		// Imprime o labirinto
-		print_maze();
+    // Verificar se a posição atual é a saída
+    if (maze[pos.i][pos.j] == 's') {
+        return true;
+    }
 
-		 // Dado a posição atual, verifica quais são as próximas posições válidas
-        // e insere cada uma delas na pilha valid_positions
-        if (pos.i > 0 && (maze[pos.i - 1][pos.j] == 'x' || maze[pos.i - 1][pos.j] == 's') &&  maze[pos.i - 1][pos.j] != '.') {
-        	valid_positions.push({pos.i - 1, pos.j});
-    	}
-		if (pos.i < num_rows - 1 && (maze[pos.i + 1][pos.j] == 'x' || maze[pos.i + 1][pos.j] == 's') && maze[pos.i + 1][pos.j] != '.') {
-			valid_positions.push({pos.i + 1, pos.j});
-		}
-		if (pos.j > 0 && (maze[pos.i][pos.j - 1] == 'x' || maze[pos.i][pos.j - 1] == 's') && maze[pos.i][pos.j - 1] != '.') {
-			valid_positions.push({pos.i, pos.j - 1});
-		}
-		if (pos.j < num_cols - 1 && (maze[pos.i][pos.j + 1] == 'x' || maze[pos.i][pos.j + 1] == 's') && maze[pos.i][pos.j + 1] != '.'){
-			valid_positions.push({pos.i, pos.j + 1});
-		}
-
-
-		
-        // Verificar se a pilha de posições não está vazia
-        // Caso não esteja, pegar o primeiro valor de valid_positions, removê-lo e chamar a função walk com esse valor
-        // Caso contrário, retornar falso
-        if (!valid_positions.empty()) {
-            pos = valid_positions.top();
-            valid_positions.pop();
-			walk(pos);
-        } else {
-            return false;
-        }
     
+    maze[pos.i][pos.j] = 'o';
 
+    // Limpar a tela
+    std::system("clear");
 
-		}
-		
-	
+    // Imprime o labirinto
+    print_maze();
+
+    // Dado a posição atual, verifica quais são as próximas posições válidas
+    // e insere cada uma delas na pilha valid_positions
+    if (pos.i > 0 && (maze[pos.i - 1][pos.j] == 'x' || maze[pos.i - 1][pos.j] == 's') && maze[pos.i - 1][pos.j] != '.') {
+        valid_positions.push({pos.i - 1, pos.j});
+    }
+    if (pos.i < num_rows - 1 && (maze[pos.i + 1][pos.j] == 'x' || maze[pos.i + 1][pos.j] == 's') && maze[pos.i + 1][pos.j] != '.') {
+        valid_positions.push({pos.i + 1, pos.j});
+    }
+    if (pos.j > 0 && (maze[pos.i][pos.j - 1] == 'x' || maze[pos.i][pos.j - 1] == 's') && maze[pos.i][pos.j - 1] != '.') {
+        valid_positions.push({pos.i, pos.j - 1});
+    }
+    if (pos.j < num_cols - 1 && (maze[pos.i][pos.j + 1] == 'x' || maze[pos.i][pos.j + 1] == 's') && maze[pos.i][pos.j + 1] != '.') {
+        valid_positions.push({pos.i, pos.j + 1});
+    }
+	// Marcar a posição atual com o símbolo '.'
+	maze[pos.i][pos.j] = '.';
+
+    
+    while (!valid_positions.empty()) {
+        pos_t proxima_pos = valid_positions.top();
+        valid_positions.pop();
+        if (walk(proxima_pos)) {
+            return true;  
+        }
+    }
+
+    return false;
 }
-
 int main(int argc, char* argv[]) {
 	// carregar o labirinto com o nome do arquivo recebido como argumento
-	pos_t initial_pos = load_maze("../data/maze6.txt");
+	pos_t initial_pos = load_maze("../data/maze.txt");
 	// chamar a função de navegação
 	
 	bool exit_found = walk(initial_pos);
@@ -151,8 +144,6 @@ int main(int argc, char* argv[]) {
 		std::cout<<"Saida nao encontrada";
 	}
 	// Tratar o retorno (imprimir mensagem)
-	
-	
 	
 	return 0;
 }
